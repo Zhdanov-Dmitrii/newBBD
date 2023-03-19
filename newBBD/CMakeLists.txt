@@ -13,13 +13,18 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
+find_package(Qt6 REQUIRED COMPONENTS Sql)
 
 set(PROJECT_SOURCES
+        Entity/Entity.h Entity/Entity.cpp
+        GUI/Addbookwindow.cpp GUI/Addbookwindow.h GUI/addbookwindow.ui
+        GUI/AddStudentWindow.cpp GUI/AddStudentWindow.h GUI/addstudentwindow.ui
+        DBManager.cpp DBManager.h
+        Entity/Student.cpp Entity/Student.h
+        Entity/Book.cpp Entity/Book.h
         main.cpp
-        mainwindow.cpp
-        mainwindow.h
-        mainwindow.ui
-)
+        GUI/Mainwindow.cpp GUI/Mainwindow.h GUI/mainwindow.ui
+        Entity/Author.cpp Entity/Author.h Entity/Publisher.cpp Entity/Publisher.h)
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(newBBD
@@ -53,6 +58,9 @@ set_target_properties(newBBD PROPERTIES
     MACOSX_BUNDLE TRUE
     WIN32_EXECUTABLE TRUE
 )
+
+target_link_libraries(newBBD PRIVATE Qt6::Sql)
+
 
 install(TARGETS newBBD
     BUNDLE DESTINATION .
