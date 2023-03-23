@@ -1,7 +1,3 @@
-//
-// Created by user on 15.03.23.
-//
-
 #ifndef NEWBBD_AUTHOR_H
 #define NEWBBD_AUTHOR_H
 
@@ -19,8 +15,7 @@ public:
 
     void setName(const QString &name);
 
-    void initFromDB(QSqlQuery& query) override;
+    void initFromDB(QSqlQuery &query) override;
 };
-
 
 #endif //NEWBBD_AUTHOR_H

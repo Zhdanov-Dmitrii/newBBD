@@ -2,15 +2,13 @@
 #include "./ui_addstudentwindow.h"
 
 AddStudentWindow::AddStudentWindow(QWidget *parent, DBManager *dbManager) :
-    QDialog(parent),
-    dbManager(dbManager),
-    ui(new Ui::AddStudentWindow)
-{
+        QDialog(parent),
+        dbManager(dbManager),
+        ui(new Ui::AddStudentWindow) {
     ui->setupUi(this);
 }
 
-AddStudentWindow::~AddStudentWindow()
-{
+AddStudentWindow::~AddStudentWindow() {
     delete ui;
 }
 
@@ -24,7 +22,7 @@ void AddStudentWindow::on_save_clicked() {
 
     try {
         dbManager->insertStudent(surname, name, course, birthDate, telephone, address);
-    } catch(QSqlError error) {
+    } catch (QSqlError error) {
         QMessageBox::critical(this, "Ошибка", error.databaseText());
     }
 

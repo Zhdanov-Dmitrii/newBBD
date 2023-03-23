@@ -1,7 +1,3 @@
-//
-// Created by user on 15.03.23.
-//
-
 #include "Publisher.h"
 
 Publisher::Publisher() {

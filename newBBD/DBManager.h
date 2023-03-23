@@ -21,7 +21,7 @@ class DBManager {
     void read(QSqlQuery &query, Entity &entity);
 
 public:
-    DBManager(const QJsonDocument& jsonDocument);
+    DBManager(const QJsonDocument &jsonDocument);
 
     bool open();
 
@@ -31,8 +31,9 @@ public:
 
     QList<Book> searchBooks(const QString &author, const QString &name, const QString &id, bool showOutOfStock);
 
-    void insertBook(const int id, const QString &name, int count, const QList<Author>& authors, const QString &subsection,
-                    std::optional<Publisher> publisher);
+    void
+    insertBook(const int id, const QString &name, int count, const QList<Author> &authors, const QString &subsection,
+               std::optional<Publisher> publisher);
 
     void deleteBook(int id);
 

@@ -17,15 +17,16 @@ QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
 
-class MainWindow : public QMainWindow
-{
-    Q_OBJECT
+class MainWindow : public QMainWindow {
+Q_OBJECT
 
 public:
     MainWindow(QWidget *parent = nullptr);
+
     ~MainWindow();
 
 private slots:
+
     void on_searchBook_clicked();
 
     void on_searchStudent_clicked();
@@ -47,10 +48,11 @@ private slots:
     void on_clear_clicked();
 
     void on_update_clicked();
+
 private:
     Ui::MainWindow *ui;
 
-    DBManager* dbManager;
+    DBManager *dbManager;
 
     QList<Book> booksShown;
     QList<Student> studentsShown;
@@ -62,12 +64,15 @@ private:
                                           "telephone", "address"};
 
     void showBook(int i);
+
     void showAllBooks();
 
     void showStudent(int i);
+
     void showAllStudent();
 
     int getIndex(QTableWidget *qTableWidget, QTableWidgetItem *item);
 
 };
+
 #endif // MAINWINDOW_H

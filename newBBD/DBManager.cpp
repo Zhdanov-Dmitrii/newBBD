@@ -1,6 +1,6 @@
 #include "DBManager.h"
 
-DBManager::DBManager(const QJsonDocument& jsonDocument) {
+DBManager::DBManager(const QJsonDocument &jsonDocument) {
 
     QString hostName = jsonDocument["hostName"].toString();
     QString databaseName = jsonDocument["databaseName"].toString();
@@ -120,7 +120,7 @@ QList<Book> DBManager::searchBooks(const QString &author, const QString &name, c
                        "\tLEFT JOIN (SELECT id_book, COUNT(*) AS countS FROM bookStudent GROUP BY id_book) AS countss ON countss.id_book = book.id \n"
                        "WHERE CAST(book.id AS TEXT) LIKE '%'||?||'%' \n"
                        "\tAND LOWER(book.name) LIKE '%'||?||'%' \n";
-    if (!showOutOfStock){
+    if (!showOutOfStock) {
         queryStr += "\tAND count - countss.counts > 0 \n";
     }
     queryStr += "GROUP BY book.id, book.name, count, subsection, publisher.name, countInStock \n"
@@ -148,8 +148,9 @@ void DBManager::insertBook(const int id, const QString &name, int count, const Q
                            const QString &subsection, std::optional<Publisher> publisher) {
     QString queryStr = "BEGIN;\n"
                        "INSERT INTO book (id, name, count, subsection, id_publisher) VALUES ("
-                       + QString::number(id) + ", '" + name + "', " + QString::number(count) + ", '" + subsection + "', ";
-    queryStr +=  publisher ? "'" +publisher.value().getName() + "'" : "null";
+                       + QString::number(id) + ", '" + name + "', " + QString::number(count) + ", '" + subsection +
+                       "', ";
+    queryStr += publisher ? "'" + publisher.value().getName() + "'" : "null";
     queryStr += ");\n";
 
     queryStr += "INSERT INTO bookAuthor (id_book, id_author) VALUES ";
@@ -167,12 +168,18 @@ void DBManager::insertBook(const int id, const QString &name, int count, const Q
 
 void DBManager::deleteBook(int id) {
     QString queryStr = "BEGIN; "
-                       "DELETE FROM bookStudent WHERE id_book = "+QString::number(id)+";"
-                                                                                      "DELETE FROM bookAuthor WHERE id_book = "+QString::number(id)+";"
-                                                                                                                                                    "DELETE FROM book WHERE id = "+QString::number(id)+";"
-                                                                                                                                                                                                       "COMMIT;";
+                       "\tDELETE FROM bookStudent WHERE id_book = ?; \n"
+                       "\tDELETE FROM bookAuthor WHERE id_book = ?; \n"
+                       "\tDELETE FROM book WHERE id = ?; \n"
+                       "COMMIT;";
+
     QSqlQuery query;
-    if(!query.exec(queryStr)) {
+    query.prepare(queryStr);
+    query.bindValue(0, id);
+    query.bindValue(1, id);
+    query.bindValue(2, id);
+
+    if (!query.exec()) {
         throw db.lastError();
     }
 }
@@ -186,7 +193,7 @@ Student DBManager::getStudent(const int id) {
     query.prepare(queryStr);
     query.bindValue(0, id);
 
-    if(!query.exec()) {
+    if (!query.exec()) {
         throw db.lastError();
     }
     query.first();
@@ -251,7 +258,7 @@ void DBManager::deleteStudent(const int id_student) {
     query.bindValue(0, id_student);
     query.bindValue(1, id_student);
 
-    if(!query.exec()) {
+    if (!query.exec()) {
         throw db.lastError();
     }
 }
@@ -353,7 +360,7 @@ QList<Student> DBManager::getReaders(int id_book) {
     query.prepare(queryStr);
     query.bindValue(0, id_book);
 
-    if(!query.exec()) {
+    if (!query.exec()) {
         throw db.lastError();
     }
 
@@ -382,7 +389,7 @@ QList<Book> DBManager::getStudentBooks(int id_student) {
     query.prepare(queryStr);
     query.bindValue(0, id_student);
 
-    if(!query.exec()) {
+    if (!query.exec()) {
         throw db.lastError();
     }
 

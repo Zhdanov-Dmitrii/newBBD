@@ -9,9 +9,10 @@ protected:
 public:
 
     int getId() const;
+
     void setId(const int id);
 
-    virtual void initFromDB(QSqlQuery& query) = 0;
+    virtual void initFromDB(QSqlQuery &query) = 0;
 };
 
 #endif // ENTITY_H

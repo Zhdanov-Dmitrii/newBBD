@@ -1,7 +1,3 @@
-//
-// Created by user on 15.03.23.
-//
-
 #ifndef NEWBBD_PUBLISHER_H
 #define NEWBBD_PUBLISHER_H
 
@@ -10,7 +6,7 @@
 #include <QSqlQuery>
 #include "Entity.h"
 
-class Publisher : public Entity{
+class Publisher : public Entity {
     QString name;
 
 public:
@@ -20,7 +16,7 @@ public:
 
     void setName(const QString &name);
 
-    virtual void initFromDB(QSqlQuery& query);
+    virtual void initFromDB(QSqlQuery &query);
 };
 
 
