@@ -6,7 +6,7 @@
 #include <QSqlDatabase>
 #include <QSqlError>
 #include <QSqlQuery>
-#include <QTextEdit>
+#include <QJsonDocument>
 #include <optional>
 
 #include "Entity/Book.h"
@@ -21,7 +21,7 @@ class DBManager {
     void read(QSqlQuery &query, Entity &entity);
 
 public:
-    DBManager(QString filePath);
+    DBManager(const QJsonDocument& jsonDocument);
 
     bool open();
 

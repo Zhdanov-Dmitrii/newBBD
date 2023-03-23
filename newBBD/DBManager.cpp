@@ -1,12 +1,17 @@
 #include "DBManager.h"
-#include <QMessageBox>
 
-DBManager::DBManager(QString filePath) {
+DBManager::DBManager(const QJsonDocument& jsonDocument) {
+
+    QString hostName = jsonDocument["hostName"].toString();
+    QString databaseName = jsonDocument["databaseName"].toString();
+    QString userName = jsonDocument["userName"].toString();
+    QString password = jsonDocument["password"].toString();
+
     db = QSqlDatabase::addDatabase("QPSQL");
-    db.setHostName("localhost");
-    db.setDatabaseName("newBBD");
-    db.setUserName("admin");
-    db.setPassword("123456");
+    db.setHostName(hostName);
+    db.setDatabaseName(databaseName);
+    db.setUserName(userName);
+    db.setPassword(password);
 }
 
 void DBManager::read(QSqlQuery &query, Entity &entity) {

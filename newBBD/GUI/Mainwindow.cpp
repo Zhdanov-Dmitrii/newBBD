@@ -6,14 +6,22 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    dbManager = new DBManager("");
+    QFile file("../dbConfig.json");
+    if(!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        QMessageBox::critical(this, "Ошибка", "Не удалось открыть файл");
+    }
+
+    QJsonDocument jsonDocument = QJsonDocument::fromJson(file.readAll());
+    file.close();
+
+    dbManager = new DBManager(jsonDocument);
+
     if(!dbManager->open())
-        QMessageBox::critical(this, "Error", "no bd connection");
-    try
-    {
+        QMessageBox::critical(this, "Ошибка", "Не удалось подключиться к базе данных");
+    try {
         dbManager->createTable();
-    } catch(QString str) {
-        QMessageBox::critical(this, "Error", str);
+    } catch(QSqlError error) {
+        QMessageBox::critical(this, "Ошибка", error.databaseText());
     }
 }
 
