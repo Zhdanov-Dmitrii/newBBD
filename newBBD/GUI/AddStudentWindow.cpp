@@ -22,7 +22,11 @@ void AddStudentWindow::on_save_clicked() {
     QString telephone = ui->telephone->text();
     QString address = ui->address->text();
 
-    dbManager->insertStudent(surname, name, course, birthDate, telephone, address);
+    try {
+        dbManager->insertStudent(surname, name, course, birthDate, telephone, address);
+    } catch(QSqlError error) {
+        QMessageBox::critical(this, "Ошибка", error.databaseText());
+    }
 
     int ret = QMessageBox::information(this, "Уcпех",
                                        "Вы успешно добавили запись!\nЖелаете продолжить",

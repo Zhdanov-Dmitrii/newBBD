@@ -80,10 +80,9 @@ void DBManager::createTable() {
             "ON DELETE NO ACTION "
             "NOT VALID); ";
 
-    qDebug() << queryStr;
     QSqlQuery query;
     if (!query.exec(queryStr)) {
-        throw query.lastError();
+        throw db.lastError();
     }
 }
 
@@ -102,7 +101,7 @@ Book DBManager::getBook(const int id) {
     query.bindValue(0, id);
 
     if (!query.exec()) {
-        throw query.lastError();
+        throw db.lastError();
     }
     query.first();
 
@@ -133,10 +132,8 @@ QList<Book> DBManager::searchBooks(const QString &author, const QString &name, c
     query.bindValue(1, name.toLower());
     query.bindValue(2, author.toLower());
 
-    qDebug() << query.lastQuery().remove('\n').remove('\t');
-
     if (!query.exec())
-        throw query.lastError();
+        throw db.lastError();
 
     while (query.next()) {
         Book book;
@@ -160,13 +157,11 @@ void DBManager::insertBook(const int id, const QString &name, int count, const Q
         queryStr += "(" + QString::number(id) + ", " + QString::number(author.getId()) + "),";
     }
     queryStr.erase(queryStr.begin() + queryStr.size() - 1, queryStr.end()); // удаление последней запятой \(*.*)/
-
     queryStr += ";\nCOMMIT;";
-    qDebug() << queryStr.remove('\n').remove('\t');
 
     QSqlQuery query;
     if (!query.exec(queryStr)) {
-        throw query.lastError();
+        throw db.lastError();
     }
 }
 
@@ -176,10 +171,9 @@ void DBManager::deleteBook(int id) {
                                                                                       "DELETE FROM bookAuthor WHERE id_book = "+QString::number(id)+";"
                                                                                                                                                     "DELETE FROM book WHERE id = "+QString::number(id)+";"
                                                                                                                                                                                                        "COMMIT;";
-    qDebug() << queryStr;
     QSqlQuery query;
     if(!query.exec(queryStr)) {
-        throw query.lastError();
+        throw db.lastError();
     }
 }
 
@@ -193,7 +187,7 @@ Student DBManager::getStudent(const int id) {
     query.bindValue(0, id);
 
     if(!query.exec()) {
-        throw query.lastError();
+        throw db.lastError();
     }
     query.first();
     Student student;
@@ -216,9 +210,8 @@ QList<Student> DBManager::searchStudents(const QString &surname, const QString &
     query.bindValue(":name", name);
     query.bindValue(":course", course);
 
-    qDebug() << query.lastQuery();
     if (!query.exec()) {
-        throw query.lastError();
+        throw db.lastError();
     }
 
     while (query.next()) {
@@ -243,8 +236,7 @@ void DBManager::insertStudent(const QString &surname, const QString &name, const
     query.bindValue(":address", address);
 
     if (!query.exec()) {
-        qDebug() << query.lastQuery();
-        //throw query.lastError();
+        throw db.lastError();
     }
 }
 
@@ -260,7 +252,7 @@ void DBManager::deleteStudent(const int id_student) {
     query.bindValue(1, id_student);
 
     if(!query.exec()) {
-        throw query.lastError();
+        throw db.lastError();
     }
 }
 
@@ -270,9 +262,8 @@ void DBManager::insertAuthor(const QString &author) {
     query.prepare(queryStr);
     query.bindValue(0, author);
     if (!query.exec()) {
-        throw query.lastError();
+        throw db.lastError();
     }
-    qDebug() << query.lastQuery();
 }
 
 QList<Author> DBManager::searchAuthors(const QString &name) {
@@ -280,7 +271,6 @@ QList<Author> DBManager::searchAuthors(const QString &name) {
     if (!name.isEmpty()) {
         queryStr += "WHERE name LIKE '%" + name + "%';";
     }
-    qDebug() << queryStr;
 
     QSqlQuery query;
     if (!query.exec(queryStr)) {
@@ -301,7 +291,7 @@ void DBManager::insertPublisher(const QString &publisher) {
     QString queryStr = "INSERT INTO publisher VALUES (" + publisher + ")";
     QSqlQuery query;
     if (!query.exec(queryStr)) {
-        throw query.lastError();
+        throw db.lastError();
     }
 }
 
@@ -335,9 +325,8 @@ void DBManager::giveBook(int id_book, int id_student) {
     query.bindValue(0, id_book);
     query.bindValue(1, id_student);
 
-    qDebug() << query.lastQuery().remove('\n').remove('\t');
     if (!query.exec()) {
-        throw query.lastError();
+        throw db.lastError();
     }
 }
 
@@ -349,9 +338,8 @@ void DBManager::takeBook(int id_book, int id_student) {
     query.bindValue(0, id_book);
     query.bindValue(1, id_student);
 
-    qDebug() << query.lastQuery().remove('\n').remove('\t');
     if (!query.exec()) {
-        throw query.lastError();
+        throw db.lastError();
     }
 }
 
@@ -365,9 +353,8 @@ QList<Student> DBManager::getReaders(int id_book) {
     query.prepare(queryStr);
     query.bindValue(0, id_book);
 
-    qDebug() << query.lastQuery().remove('\n').remove('\t');
     if(!query.exec()) {
-        throw query.lastError();
+        throw db.lastError();
     }
 
     QList<Student> res;
@@ -395,10 +382,8 @@ QList<Book> DBManager::getStudentBooks(int id_student) {
     query.prepare(queryStr);
     query.bindValue(0, id_student);
 
-    qDebug() << query.lastQuery().remove('\n').remove('\t');
-
     if(!query.exec()) {
-        throw query.lastError();
+        throw db.lastError();
     }
 
     QList<Book> res;

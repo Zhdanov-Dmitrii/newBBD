@@ -30,7 +30,11 @@ void AddBookWindow::showResultSearchPublisher() {
 void AddBookWindow::on_searchAuthor_clicked() {
     QString author = ui->authorLE->text();
 
-    resultSearchAuthor = dbManager->searchAuthors(author);
+    try {
+        resultSearchAuthor = dbManager->searchAuthors(author);
+    } catch(QSqlError error) {
+        QMessageBox::critical(this, "Ошибка", error.databaseText());
+    }
 
     showResultSearchAuthors();
 }
@@ -39,7 +43,11 @@ void AddBookWindow::on_searchAuthor_clicked() {
 void AddBookWindow::on_searchPublisher_clicked() {
     QString publisher = ui->publisherLE->text();
 
-    resultSearchPublisher = dbManager->searchPublisher(publisher);
+    try {
+        resultSearchPublisher = dbManager->searchPublisher(publisher);
+    } catch(QSqlError error) {
+        QMessageBox::critical(this, "Ошибка", error.databaseText());
+    }
 
     showResultSearchPublisher();
 }
@@ -47,13 +55,21 @@ void AddBookWindow::on_searchPublisher_clicked() {
 void AddBookWindow::on_addPublisher_clicked() {
     QString publisher = ui->publisherLE->text();
 
-    dbManager->insertPublisher(publisher);
+     try {
+         dbManager->insertPublisher(publisher);
+     } catch(QSqlError error) {
+         QMessageBox::critical(this, "Ошибка", error.databaseText());
+     }
 }
 
 void AddBookWindow::on_addAuthor_clicked() {
     QString author = ui->authorLE->text();
 
-    dbManager->insertAuthor(author);
+    try {
+        dbManager->insertAuthor(author);
+    } catch(QSqlError error) {
+        QMessageBox::critical(this, "Ошибка", error.databaseText());
+    }
 }
 
 int AddBookWindow::getIndex(QListWidgetItem *item, QListWidget *widget) {
@@ -81,7 +97,11 @@ void AddBookWindow::on_resultSearchPublisher_itemDoubleClicked(QListWidgetItem *
     int i = getIndex(item, ui->resultSearchPublisher);
     if (i == -1) return;
 
-    ui->bookPublisher->setText(resultSearchPublisher[i].getName());
+    try {
+        ui->bookPublisher->setText(resultSearchPublisher[i].getName());
+    } catch(QSqlError error) {
+        QMessageBox::critical(this, "Ошибка", error.databaseText());
+    }
 }
 
 
@@ -96,6 +116,10 @@ void AddBookWindow::on_save_clicked() {
     int count = ui->count->text().toInt();
     QString subsection = ui->subsectionBook->currentText();
 
-    dbManager->insertBook(id, name, count, bookAuthor, subsection, bookPublisher);
+    try {
+        dbManager->insertBook(id, name, count, bookAuthor, subsection, bookPublisher);
+    } catch(QSqlError error) {
+        QMessageBox::critical(this, "Ошибка", error.databaseText());
+    }
 }
 

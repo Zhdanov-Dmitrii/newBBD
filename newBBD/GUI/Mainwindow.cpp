@@ -92,8 +92,11 @@ void MainWindow::on_searchBook_clicked()
     QString subsection = ui->subsectionBook->currentText();
     bool inStock = ui->inStock;
 
-    booksShown = dbManager->searchBooks(author, name, id, inStock);
-
+    try {
+        booksShown = dbManager->searchBooks(author, name, id, inStock);
+    } catch(QSqlError error) {
+        QMessageBox::critical(this, "Ошибка", error.databaseText());
+    }
     showAllBooks();
 }
 
@@ -103,8 +106,12 @@ void MainWindow::on_searchStudent_clicked()
     QString surname = ui->surnameStudent->text();
     QString name = ui->nameStudent->text();
     QString course = ui->courseStudent->text();
-    studentsShown = dbManager->searchStudents(surname, name, course);
 
+    try {
+        studentsShown = dbManager->searchStudents(surname, name, course);
+    } catch(QSqlError error) {
+        QMessageBox::critical(this, "Ошибка", error.databaseText());
+    }
     showAllStudent();
 }
 
@@ -128,7 +135,7 @@ void MainWindow::on_deleteBook_clicked() {
     try {
         dbManager->deleteBook(booksShown[ind].getId());
     } catch (QSqlError error) {
-        QMessageBox::critical(this, "Error", error.databaseText());
+        QMessageBox::critical(this, "Ошибка", error.databaseText());
     }
     booksShown.remove(ind);
     ui->tableBook->removeRow(ind);
@@ -147,15 +154,14 @@ void MainWindow::on_takeBook_clicked() {
 
     try {
         dbManager->takeBook(book.getId(), student.getId());
-
         booksShown[currentBookRow] = dbManager->getBook(book.getId());
-        showBook(currentBookRow);
-
         studentsShown[currentStudentRow] = dbManager->getStudent(student.getId());
-        showStudent(currentStudentRow);
-    } catch (QSqlError error) {
-
+    } catch(QSqlError error) {
+        QMessageBox::critical(this, "Ошибка", error.databaseText());
     }
+
+    showBook(currentBookRow);
+    showStudent(currentStudentRow);
 }
 
 void MainWindow::on_giveBook_clicked() {
@@ -166,23 +172,22 @@ void MainWindow::on_giveBook_clicked() {
 
     try {
         dbManager->giveBook(book.getId(), student.getId());
-
         booksShown[currentBookRow] = dbManager->getBook(book.getId());
-        showBook(currentBookRow);
-
         studentsShown[currentStudentRow] = dbManager->getStudent(student.getId());
-        showStudent(currentStudentRow);
-    } catch (QSqlError error) {
-
+    } catch(QSqlError error) {
+        QMessageBox::critical(this, "Ошибка", error.databaseText());
     }
+
+    showBook(currentBookRow);
+    showStudent(currentStudentRow);
 }
 
 void MainWindow::on_bookReaders_clicked() {
     Book book = booksShown[ui->tableBook->currentRow()];
     try {
         studentsShown = dbManager->getReaders(book.getId());
-    } catch (QSqlError error) {
-
+    } catch(QSqlError error) {
+        QMessageBox::critical(this, "Ошибка", error.databaseText());
     }
 
     showAllStudent();
@@ -192,8 +197,8 @@ void MainWindow::on_studentBooks_clicked() {
     Student student = studentsShown[ui->tableStudent->currentRow()];
     try {
         booksShown = dbManager->getStudentBooks(student.getId());
-    } catch (QSqlError error) {
-
+    } catch(QSqlError error) {
+        QMessageBox::critical(this, "Ошибка", error.databaseText());
     }
 
     showAllBooks();
@@ -212,8 +217,8 @@ void MainWindow::on_update_clicked() {
     for(auto book : booksShown) {
         try {
             books.push_back(dbManager->getBook(book.getId()));
-        } catch (QSqlError error) {
-
+        } catch(QSqlError error) {
+            QMessageBox::critical(this, "Ошибка", error.databaseText());
         }
     }
     booksShown = books;
@@ -222,8 +227,8 @@ void MainWindow::on_update_clicked() {
     for(auto student : studentsShown) {
         try {
             students.push_back(dbManager->getStudent(student.getId()));
-        } catch (QSqlError error) {
-
+        } catch(QSqlError error) {
+            QMessageBox::critical(this, "Ошибка", error.databaseText());
         }
     }
     studentsShown = students;
